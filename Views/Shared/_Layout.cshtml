@@ -21,6 +21,29 @@
                     <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
+                @* Phần hiển thị thông tin đăng nhập mới thêm vào *@
+                <ul class="navbar-nav">
+                    @if (Session["User"] != null)
+                    {
+                        @* Nếu đã đăng nhập: Hiện tên và nút Đăng xuất *@
+                        <li class="nav-item">
+                            <span class="nav-link text-light">Chào, <strong>@Session["TenHienThi"]</strong></span>
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng xuất", "Logout", "Account", null, new { @class = "nav-link btn btn-outline-danger btn-sm ms-2" })
+                        </li>
+                    }
+                    else
+                    {
+                        @* Nếu chưa đăng nhập: Hiện nút Đăng nhập & Đăng ký *@
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng ký", "Register", "Account", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "nav-link" })
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </nav>

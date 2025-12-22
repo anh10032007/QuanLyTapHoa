@@ -1,0 +1,191 @@
+﻿@model QuanLyTapHoa.Models.Account
+
+@{
+    ViewBag.Title = "ĐĂNG NHẬP"; // Tiêu đề trang
+}
+
+<style>
+    /* 1. Căn giữa form trên trang */
+    .login-container {
+        display: flex;
+        justify-content: center; 
+        align-items: flex-start; 
+        padding: 60px 20px;
+        min-height: 80vh;
+        background-color: #f5f5f5; 
+    }
+
+    /* 2. Định dạng khối form */
+    .login-box {
+        width: 100%;
+        max-width: 400px; /* Chiều rộng tối đa cố định */
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px; /* Bo góc */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Tạo bóng */
+        overflow: hidden;
+    }
+
+    /* 3. Tiêu đề (Header) */
+    .login-header {
+        background-color: #008000; /* Màu xanh lá */
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* 4. Nội dung form */
+    .login-body {
+        padding: 30px;
+    }
+
+        .login-body h4 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+    /* 5. Nhóm input */
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="password"] {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+    /* 6. Nút Đăng nhập */
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #008000; /* Màu nút */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+    }
+
+        .submit-btn:hover {
+            background-color: #006400; /* Màu hover */
+        }
+
+    /* 7. Thông báo lỗi */
+    .error-alert {
+        padding: 10px;
+        margin-bottom: 20px;
+        color: #a94442;
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    /* 8. Chân form (links) */
+    .login-footer-links {
+        margin-top: 20px;
+        text-align: center;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        line-height: 2; /* Khoảng cách giữa các dòng */
+    }
+
+        .login-footer-links a {
+            color: #008000;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+
+            .login-footer-links a:hover {
+                text-decoration: underline;
+            }
+
+    /* 9. Thêm CSS cho liên kết đăng ký */
+    .register-prompt {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 15px;
+        color: #555;
+    }
+
+        .register-prompt a {
+            color: #e53935; 
+            font-weight: bold;
+            text-decoration: none;
+        }
+</style>
+
+
+<div class="login-container">
+    <div class="login-box">
+        <div class="login-header">
+            <h2>ĐĂNG NHẬP</h2>
+        </div>
+
+        <div class="login-body">
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <h4>Vui lòng nhập thông tin đăng nhập</h4>
+
+                if (ViewBag.Error != null)
+                {
+                    <div class="error-alert">@ViewBag.Error</div>
+                }
+
+                <div class="input-group">
+                    @Html.LabelFor(model => model.Username, "Tên đăng nhập")
+                    @Html.TextBoxFor(model => model.Username, new
+                    {
+                        placeholder = "Tên đăng nhập",
+                        required = "required"
+                    })
+                </div>
+
+                <div class="input-group">
+                    @Html.LabelFor(model => model.Password, "Mật khẩu")
+                    @Html.PasswordFor(model => model.Password, new
+                    {
+                        placeholder = "Mật khẩu",
+                        required = "required"
+                    })
+                </div>
+
+                <div>
+                    <input type="submit" value="Đăng Nhập" class="submit-btn" />
+                </div>
+            }
+
+            @* Thêm liên kết Đăng ký vào footer *@
+            <div class="register-prompt">
+                Bạn chưa có tài khoản?
+                <a href="@Url.Action("Register", "Home")">Đăng ký ngay</a>
+            </div>
+
+            <div class="login-footer-links">
+                @Html.ActionLink("Quên mật khẩu?", "ForgotPassword", "Home")
+                |
+                @Html.ActionLink("Quay lại Trang chủ", "Index", "Home")
+            </div>
+
+        </div>
+    </div>
+</div>
