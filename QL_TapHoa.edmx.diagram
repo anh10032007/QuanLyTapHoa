@@ -6,12 +6,12 @@
     <edmx:Diagrams>
       <Diagram DiagramId="18aa58620bc44591bea157c44ca5c4e5" Name="Diagram1">
         <EntityTypeShape EntityType="QL_TapHoaModel.tblChiTietDonHang" Width="1.5" PointX="7.5" PointY="1.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="QL_TapHoaModel.tblDanhMuc" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_TapHoaModel.tblDanhMuc" Width="1.5" PointX="2.125" PointY="12.875" IsExpanded="true" />
         <EntityTypeShape EntityType="QL_TapHoaModel.tblDonHang" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="QL_TapHoaModel.tblKhachHang" Width="1.5" PointX="3" PointY="6.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QL_TapHoaModel.tblNhaCungCap" Width="1.5" PointX="3" PointY="16" IsExpanded="true" />
-        <EntityTypeShape EntityType="QL_TapHoaModel.tblNhanVien" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QL_TapHoaModel.tblSanPham" Width="1.5" PointX="5.25" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_TapHoaModel.tblKhachHang" Width="1.5" PointX="1.125" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_TapHoaModel.tblNhaCungCap" Width="1.5" PointX="3.625" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_TapHoaModel.tblNhanVien" Width="1.5" PointX="3.125" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_TapHoaModel.tblSanPham" Width="1.5" PointX="5.75" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="QL_TapHoaModel.tblTrangThaiDon" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="QL_TapHoaModel.tblVaiTro" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
         <AssociationConnector Association="QL_TapHoaModel.FK__tblChiTie__MaDon__59063A47" ManuallyRouted="false" />

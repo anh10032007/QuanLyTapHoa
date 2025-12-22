@@ -1,0 +1,19 @@
+﻿@using QuanLyTapHoa
+@model IEnumerable<tblNhaCungCap>
+
+<div class="list-group">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <a href="@Url.Action("TimTheoNhaCungCap", "Home", new { id = item.MaNCC })"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+
+                <span>
+                    <i class="bi bi-truck text-warning me-2"></i>
+                    @item.TenNCC
+                </span>
+            </a>
+        }
+    }
+</div>

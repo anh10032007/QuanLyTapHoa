@@ -1,0 +1,16 @@
+﻿@using QuanLyTapHoa
+@model IEnumerable<tblDanhMuc>
+
+<div class="list-group">
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Action("TimTheoDanhMuc", "Home", new { id = item.MaDM })"
+           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+
+            <span>
+                <i class="bi bi-tag-fill text-success me-2"></i> @item.TenDM
+            </span>
+
+        </a>
+    }
+</div>
