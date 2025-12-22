@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Tìm kiếm nâng cao";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-sliders2-vertical"></i> Bộ lọc tìm kiếm</h4>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("KetQuaTimKiemNangCao", "Home", FormMethod.Post))
+                    {
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Khoảng giá:</label>
+                                <select class="form-select" name="price">
+                                    <option value="">-- Tất cả mức giá --</option>
+                                    <option value="0">Dưới 50.000 VNĐ</option>
+                                    <option value="1">Từ 50.000 - 100.000 VNĐ</option>
+                                    <option value="2">Trên 100.000 VNĐ</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Sắp xếp giá:</label>
+                                <select class="form-select" name="sort">
+                                    <option value="">Mặc định</option>
+                                    <option value="asc">Giá thấp đến cao</option>
+                                    <option value="desc">Giá cao đến thấp</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Danh mục sản phẩm:</label>
+                                @Html.DropDownList("MaDanhMuc", (IEnumerable<SelectListItem>)ViewBag.ListDanhMuc, "-- Chọn danh mục --", new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nhà cung cấp:</label>
+                                @Html.DropDownList("MaNCC", (IEnumerable<SelectListItem>)ViewBag.ListNhaCungCap, "-- Chọn nhà cung cấp --", new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-12 mt-4 text-center">
+                                <button type="submit" class="btn btn-success px-5 py-2 fw-bold">
+                                    <i class="bi bi-search"></i> Tìm kiếm ngay
+                                </button>
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary px-4 py-2 ms-2">
+                                    Quay lại
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
