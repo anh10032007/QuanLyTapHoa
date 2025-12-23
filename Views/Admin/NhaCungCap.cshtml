@@ -1,0 +1,83 @@
+﻿@model IEnumerable<QuanLyTapHoa.Models.NhaCungCap>
+@{
+    ViewBag.Title = "Nhà cung cấp";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="row">
+    <!-- DANH SÁCH -->
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5>Danh sách nhà cung cấp</h5>
+            </div>
+            <table class="table table-bordered mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên nhà cung cấp</th>
+                        <th>Số SP</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ncc in Model)
+                    {
+                        <tr>
+                            <td>@ncc.MaNCC</td>
+                            <td>@ncc.TenNCC</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    @ncc.SoSanPham
+                                </span>
+                            </td>
+                            <td>
+                                @if (ncc.SoSanPham == 0)
+                                {
+                                    <a href="@Url.Action("DeleteSupplier", new { id = ncc.MaNCC })"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Xóa nhà cung cấp này?')">
+                                        Xóa
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm" disabled>
+                                        Không thể xóa
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FORM THÊM -->
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5>Thêm nhà cung cấp</h5>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    <div class="mb-3">
+                        <label>Tên nhà cung cấp</label>
+                        <input type="text" name="TenNCC" class="form-control" required />
+                    </div>
+
+                    <button class="btn btn-success w-100">Thêm</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

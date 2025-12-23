@@ -1,4 +1,6 @@
-﻿@{
+﻿@model QuanLyTapHoa.Models.Account
+
+@{
     ViewBag.Title = "Đăng nhập";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -37,7 +39,7 @@
                             <label for="TenDangNhap" class="form-label fw-bold text-secondary">Tài khoản / Email</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-person-fill text-success"></i></span>
-                                <input type="text" class="form-control" id="TenDangNhap" name="TenDangNhap"
+                                <input type="text" class="form-control" id="TenDangNhap" name="USERNAME"
                                        value="@ViewBag.Email"
                                        placeholder="Nhập tên đăng nhập hoặc email..." required autofocus>
                             </div>
@@ -47,7 +49,7 @@
                             <label for="MatKhau" class="form-label fw-bold text-secondary">Mật khẩu</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-lock-fill text-success"></i></span>
-                                <input type="password" class="form-control" id="MatKhau" name="MatKhau"
+                                <input type="password" class="form-control" id="MatKhau" name="PASSWORD"
                                        placeholder="Nhập mật khẩu..." required>
                             </div>
                         </div>

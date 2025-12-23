@@ -37,18 +37,33 @@ namespace QuanLyTapHoa.Controllers
         }
 
         // 2. Thêm vào giỏ hàng
-        public ActionResult ThemGioHang(int iMaSP, string strURL)
+        public ActionResult Them(int iMaSP, string strURL)
         {
             Cart cart = LayGioHang();
 
-            // Gọi hàm Them từ class Cart
-            cart.Them(iMaSP);
+            var sp = db.tblSanPhams.Find(iMaSP);
+            if (sp == null || sp.SoLuongTon <= 0)
+            {
+                TempData["Error"] = "Sản phẩm đã hết hàng";
+                return Redirect(strURL);
+            }
 
-            // Cập nhật lại Session
+            // kiểm tra số lượng trong giỏ
+            var item = cart.list.FirstOrDefault(x => x.MaSP == iMaSP);
+            int soLuongDangCo = item != null ? item.SoLuong : 0;
+
+            if (soLuongDangCo + 1 > sp.SoLuongTon)
+            {
+                TempData["Error"] = "Không thể mua quá số lượng tồn";
+                return Redirect(strURL);
+            }
+
+            cart.Them(iMaSP);
             Session["GioHang"] = cart;
 
             return Redirect(strURL);
         }
+
 
         // 3. Mua Ngay (Thêm và chuyển đến trang giỏ hàng)
         public ActionResult MuaNgay(int iMaSP)
@@ -64,21 +79,31 @@ namespace QuanLyTapHoa.Controllers
         public ActionResult CapNhatGioHang(int iMaSP, FormCollection f)
         {
             Cart cart = LayGioHang();
+            int soLuongMoi = int.Parse(f["txtSoLuong"]);
 
-            int soLuongMoi = int.Parse(f["txtSoLuong"].ToString());
+            var sp = db.tblSanPhams.Find(iMaSP);
+            var item = cart.list.FirstOrDefault(n => n.MaSP == iMaSP);
 
-            // Gọi hàm cập nhật (bạn cần bổ sung hàm này vào class Cart nếu chưa có, hoặc dùng logic dưới)
-            // Ở đây tôi dùng hàm CapNhatSL tôi đã gợi ý ở bước trước, hoặc tự xử lý:
-            var item = cart.list.Find(n => n.MaSP == iMaSP);
-            if (item != null)
+            if (item != null && sp != null)
             {
-                item.SoLuong = soLuongMoi;
-                if (item.SoLuong <= 0) cart.list.Remove(item);
+                if (soLuongMoi <= 0)
+                {
+                    cart.list.Remove(item);
+                }
+                else if (soLuongMoi > sp.SoLuongTon)
+                {
+                    TempData["Error"] = "Số lượng vượt quá tồn kho";
+                }
+                else
+                {
+                    item.SoLuong = soLuongMoi;
+                }
             }
 
             Session["GioHang"] = cart;
             return RedirectToAction("Index");
         }
+
 
         // 5. Xóa sản phẩm
         public ActionResult XoaGioHang(int iMaSP)
@@ -132,22 +157,38 @@ namespace QuanLyTapHoa.Controllers
       
 
                 db.tblDonHangs.Add(ddh);
-                db.SaveChanges(); 
-
-               
-                foreach (var item in cart.list)
-                {
-                    tblChiTietDonHang ctdh = new tblChiTietDonHang();
-
-                    ctdh.MaDon = ddh.MaDon;      
-                    ctdh.MaSP = item.MaSP;     
-                    ctdh.SoLuong = item.SoLuong;
-                    ctdh.DonGiaLucMua = item.DonGia;       
-                    db.tblChiTietDonHangs.Add(ctdh);
-                }
                 db.SaveChanges();
 
-             
+
+                foreach (var item in cart.list)
+                {
+                    var sp = db.tblSanPhams.Find(item.MaSP);
+                    if (sp == null || sp.SoLuongTon < item.SoLuong)
+                    {
+                        TempData["Error"] = "Sản phẩm không đủ số lượng tồn";
+                        return RedirectToAction("Index", "GioHang");
+                    }
+
+                    // Tạo chi tiết đơn hàng
+                    tblChiTietDonHang ctdh = new tblChiTietDonHang
+                    {
+                        MaDon = ddh.MaDon,
+                        MaSP = item.MaSP,
+                        SoLuong = item.SoLuong,
+                        DonGiaLucMua = item.DonGia
+                    };
+
+                    db.tblChiTietDonHangs.Add(ctdh);
+
+                    sp.SoLuongTon -= item.SoLuong;
+
+                    if (sp.SoLuongTon <= 0)
+                    {
+                        sp.TrangThai = false;
+                    }
+                }
+
+                db.SaveChanges();          
                 Session["GioHang"] = null;
 
                 // Chuyển hướng đến trang thông báo thành công

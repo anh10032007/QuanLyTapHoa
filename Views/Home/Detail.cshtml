@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = Model.TenSP;
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Đảm bảo đường dẫn Layout đúng
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
 
     // Định dạng tiền tệ
     var priceFormat = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
@@ -20,13 +20,7 @@
                      style="max-height: 400px; object-fit: contain;">
             </div>
 
-            @* <div class="thumbnails d-flex justify-content-center gap-2">
-                    @foreach (var item in Model.tblHinhAnh)
-                    {
-                        <img class="img-thumbnail" src="@Url.Content("~/Content/Images/" + item.HinhAnh)" ... />
-                    }
-                </div>
-            *@
+            
         </div>
     </div>
 
@@ -105,7 +99,6 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            // Script xử lý đổi ảnh khi click thumbnail (giữ lại để dùng sau này)
             $(".img-thumbnail").on("click", function () {
                 var newImageSrc = $(this).data("full-src");
                 $("#mainImage").attr("src", newImageSrc);

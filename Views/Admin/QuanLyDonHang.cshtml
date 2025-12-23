@@ -1,0 +1,54 @@
+﻿@model IEnumerable<QuanLyTapHoa.tblDonHang>
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <h2 class="text-success fw-bold mb-4">QUẢN LÝ ĐƠN HÀNG</h2>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã ĐH</th>
+                        <th>Khách Hàng</th>
+                        <th>Ngày Đặt</th>
+                        <th>Tổng Tiền</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>#@item.MaDon</strong></td>
+                            <td>@(item.tblKhachHang != null ? item.tblKhachHang.TenKH : "Khách vãng lai")</td>
+                            <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("dd/MM/yyyy") : "")</td>
+                            <td class="text-danger fw-bold">@string.Format("{0:N0}", item.TongTien)₫</td>
+                            <td>
+                                @if (item.TrangThai == 0)
+                                {<span class="badge bg-warning text-dark">Chờ duyệt</span> }
+                                else
+                                { <span class="badge bg-success">Hoàn thành</span>}
+                            </td>
+                            <td class="text-center">
+                                <a href="@Url.Action("OrderDetail", "Admin", new { id = item.MaDon })" class="btn btn-sm btn-info text-white">
+                                    <i class="bi bi-eye"></i> Xem chi tiết
+                                </a>
+
+                                @if (item.TrangThai == 0)
+                                {
+                                    <a href="@Url.Action("DuyetDon", "Admin", new { id = item.MaDon })" class="btn btn-sm btn-success" onclick="return confirm('Xác nhận duyệt đơn hàng này?')">
+                                        <i class="bi bi-check-lg"></i> Duyệt
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

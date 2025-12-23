@@ -1,0 +1,75 @@
+﻿@model QuanLyTapHoa.Models.SanPham
+@{
+    ViewBag.Title = "Sửa sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h4>Sửa sản phẩm</h4>
+
+@using (Html.BeginForm("EditProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.MaSP)
+    @Html.HiddenFor(m => m.AnhSP)
+
+    <div class="mb-3">
+        <label>Tên sản phẩm</label>
+        @Html.TextBoxFor(m => m.TenSP, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label>Danh mục</label>
+        @Html.DropDownListFor(
+                                              m => m.MaDM,
+                                              new SelectList(ViewBag.DanhMuc, "MaDM", "TenDM", Model.MaDM),
+                                              "-- Chọn danh mục --",
+                                              new { @class = "form-select" }
+                                          )
+    </div>
+
+    <div class="mb-3">
+        <label>Nhà cung cấp</label>
+        @Html.DropDownListFor(
+                                         m => m.MaNCC,
+                                         new SelectList(ViewBag.NhaCungCap, "MaNCC", "TenNCC", Model.MaNCC),
+                                         "-- Chọn nhà cung cấp --",
+                                         new { @class = "form-select" }
+                                     )
+    </div>
+
+    <div class="mb-3">
+        <label>Giá bán</label>
+        @Html.TextBoxFor(m => m.GiaBan, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        <label>Số lượng tồn</label>
+        @Html.TextBoxFor(m => m.SoLuongTon, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        <label>Mô tả </label>
+        @Html.TextAreaFor(m => m.MoTaChiTiet, new { @class = "form-control", rows = 4 })
+    </div>
+
+    <div class="mb-3">
+        <label>Trạng thái</label>
+        <select name="TrangThai" class="form-select">
+            <option value="true" @(Model.TrangThai == true ? "selected" : "")>Bán</option>
+            <option value="false" @(Model.TrangThai == false ? "selected" : "")>Ngừng bán</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Ảnh hiện tại</label><br />
+        <img src="~/Content/images/@Model.AnhSP" width="100" class="mb-2" />
+    </div>
+
+    <div class="mb-3">
+        <label>Đổi ảnh (nếu cần)</label>
+        <input type="file" name="UploadImage" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary">Lưu thay đổi</button>
+}
+

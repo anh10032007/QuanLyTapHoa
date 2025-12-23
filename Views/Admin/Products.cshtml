@@ -1,0 +1,50 @@
+﻿@model IEnumerable<QuanLyTapHoa.Models.SanPham>
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between">
+        <h5>Danh sách sản phẩm</h5>
+        <a href="@Url.Action("Create")" class="btn btn-success btn-sm">+ Thêm</a>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã</th>
+                    <th>Ảnh</th>
+                    <th>Tên</th>
+                    <th>Giá</th>
+                    <th>Tồn</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sp in Model)
+                {
+                    <tr>
+                        <td>@sp.MaSP</td>
+                        <td><img src="~/Content/images/@sp.AnhSP" width="60" /></td>
+                        <td class="text-start">@sp.TenSP</td>
+                        <td>@String.Format("{0:N0} ₫", sp.GiaBan)</td>
+                        <td>@sp.SoLuongTon</td>
+                        <td>
+                            @if (sp.TrangThai == true)
+                            {<span class="badge bg-success">Bán</span> }
+                            else
+                            { <span class="badge bg-secondary">Ngừng</span>}
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditProduct", new { id = sp.MaSP })" class="btn btn-warning btn-sm">Sửa</a>
+                            <a href="@Url.Action("Delete", new { id = sp.MaSP })" class="btn btn-danger btn-sm" onclick="return confirm('Xóa?')">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

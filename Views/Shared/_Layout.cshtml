@@ -43,16 +43,30 @@
                     }
                     else
                     {
+                        // 1. Hiện nút quản trị nếu là Admin hoặc Nhân viên
+                        if (Session["Role"] != null && (Session["Role"].ToString() == "Admin" || Session["Role"].ToString() == "Nhân viên"))
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-warning fw-bold shadow-sm text-dark" href="@Url.Action("Products", "Admin")">
+                                    <i class="bi bi-speedometer2"></i> Trang Quản Trị
+                                </a>
+                            </li>
+                        }
+
+                        // 2. Dropdown thông tin người dùng (Gộp chung lại cho gọn)
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle"></i>
-                                Xin chào, @Session["TenHienThi"]
+                                <i class="bi bi-person-circle"></i> Xin chào, @Session["TenHienThi"]
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-                                <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-person-vcard"></i> Thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="@Url.Action("Logout","User")">Đăng xuất</a></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="@Url.Action("Logout","User")">
+                                        <i class="bi bi-box-arrow-left"></i> Đăng xuất
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     }

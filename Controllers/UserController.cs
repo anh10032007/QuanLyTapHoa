@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using QuanLyTapHoa;
+using QuanLyTapHoa.Models;
 
 namespace QuanLyTapHoa.Controllers
 {
@@ -19,45 +19,62 @@ namespace QuanLyTapHoa.Controllers
 
         // POST: Xử lý Đăng nhập
         [HttpPost]
-        public ActionResult Login(FormCollection collect)
+        public ActionResult Login(Account model)
         {
-            // 1. Sửa dòng này: Lấy dữ liệu từ input có name="TenDangNhap"
-            var sTaiKhoan = collect["TenDangNhap"];
-            var sMatKhau = collect["MatKhau"];
-
-            if (string.IsNullOrEmpty(sTaiKhoan) || string.IsNullOrEmpty(sMatKhau))
+            if (ModelState.IsValid)
             {
-                ViewBag.Error = "Vui lòng nhập tên đăng nhập và mật khẩu!";
-                return View();
-            }
 
-            // 2. Logic kiểm tra: Chấp nhận cả Tên đăng nhập HOẶC Email
-            // (Vì người dùng có thể nhập "khach1" hoặc "khach1@test.com")
-            tblKhachHang kh = db.tblKhachHangs.FirstOrDefault(x =>
-                (x.TenDangNhap == sTaiKhoan || x.Email == sTaiKhoan) && x.MatKhau == sMatKhau);
-
-            if (kh != null)
-            {
-                // Kiểm tra xem tài khoản có bị khóa không (nếu có cột TrangThai)
-                if (kh.TrangThai == false)
+                if (string.IsNullOrEmpty(model.USERNAME) || string.IsNullOrEmpty(model.PASSWORD))
                 {
-                    ViewBag.Error = "Tài khoản của bạn đang bị khóa!";
+                    ViewBag.Error = "Vui lòng nhập tên đăng nhập và mật khẩu!";
                     return View();
                 }
 
-                // Đăng nhập thành công
-                Session["User"] = kh;
-                Session["TenHienThi"] = kh.TenKH; // Lưu tên hiển thị (Nguyễn Văn A)
+                // 2. Logic kiểm tra: Chấp nhận cả Tên đăng nhập HOẶC Email
+                // Khách hàng đăng nhập
+                tblKhachHang kh = db.tblKhachHangs.FirstOrDefault(x => (x.TenDangNhap == model.USERNAME || x.Email == model.USERNAME) && x.MatKhau == model.PASSWORD);
 
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                if (kh != null)
+                {
+                    // Kiểm tra xem tài khoản có bị khóa không (nếu có cột TrangThai)
+                    if (kh.TrangThai == false)
+                    {
+                        ViewBag.Error = "Tài khoản của bạn đang bị khóa!";
+                        return View();
+                    }
+
+                    // Đăng nhập thành công
+                    Session["User"] = kh;
+                    Session["TenHienThi"] = kh.TenKH;
+                    Session["Role"] = "User";
+
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Nhân viên đăng nhập
+                var nv = db.tblNhanViens.FirstOrDefault(x => x.TenDangNhap == model.USERNAME && x.MatKhau == model.PASSWORD);
+                if (nv != null)
+                {
+                    if (nv.TrangThai == false)
+                    {
+                        ViewBag.Error = "Tài khoản nhân viên này đã bị ngưng hoạt động!";
+                        return View(model);
+                    }
+
+                    Session["User"] = nv;
+                    Session["TenHienThi"] = nv.TenNV;
+
+                    // Kiểm tra IDVaiTro để định danh Admin hoặc Nhân viên
+                    if (nv.VaiTro == 1)
+                        Session["Role"] = "Admin";
+                    else
+                        Session["Role"] = "Nhân viên";
+
+                    return RedirectToAction("Index", "Home");
+                }
                 ViewBag.Error = "Tên đăng nhập hoặc Mật khẩu không đúng!";
-                // Lưu lại tên đăng nhập để người dùng không phải gõ lại
-                ViewBag.Email = sTaiKhoan; // (Lưu ý: Trong View bạn đang dùng @ViewBag.Email để điền lại value)
-                return View();
             }
+                return View(model);
         }
 
         // Đăng xuất
@@ -67,6 +84,7 @@ namespace QuanLyTapHoa.Controllers
             return RedirectToAction("Login");
         }
 
+
         // GET: Đăng ký
         public ActionResult Register()
         {
@@ -75,7 +93,6 @@ namespace QuanLyTapHoa.Controllers
 
         // POST: Xử lý Đăng ký
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Register(tblKhachHang kh, string MatKhauXacNhan)
         {
             if (ModelState.IsValid)
@@ -97,8 +114,6 @@ namespace QuanLyTapHoa.Controllers
 
                 try
                 {
-                    // Gán các giá trị mặc định nếu null
-                    // Cột tên trong hình là NgayDangKy
                     kh.NgayDangKy = DateTime.Now;
                     if (kh.TrangThai == null) kh.TrangThai = true; // Mặc định là hoạt động
 

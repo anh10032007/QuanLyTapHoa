@@ -1,0 +1,53 @@
+﻿@model QuanLyTapHoa.tblDonHang
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-success fw-bold">CHI TIẾT ĐƠN HÀNG #@Model.MaDon</h4>
+            <a href="@Url.Action("QuanLyDonHang")" class="btn btn-sm btn-secondary">Quay lại</a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Khách hàng:</strong> @(Model.tblKhachHang != null ? Model.tblKhachHang.TenKH : "Khách vãng lai")</p>
+                    <p><strong>Ngày đặt:</strong> @Model.NgayDat.Value.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p><strong>Trạng thái:</strong> @(Model.TrangThai == 0 ? "Chờ duyệt" : "Hoàn thành")</p>
+                </div>
+            </div>
+
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ct in Model.tblChiTietDonHangs)
+                    {
+                        <tr>
+                            <td>@ct.tblSanPham.TenSP</td>
+                            <td class="text-center">@ct.SoLuong</td>
+                            <td class="text-end">@string.Format("{0:N0}", ct.DonGiaLucMua)₫</td>
+                            <td class="text-end fw-bold">@string.Format("{0:N0}", ct.SoLuong * ct.DonGiaLucMua)₫</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">TỔNG CỘNG:</th>
+                        <th class="text-end text-danger fs-5">@string.Format("{0:N0}", Model.TongTien)₫</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

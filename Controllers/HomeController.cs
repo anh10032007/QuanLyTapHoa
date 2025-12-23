@@ -11,13 +11,18 @@ namespace QuanLyTapHoa.Controllers
       
         QL_TapHoaEntities db = new QL_TapHoaEntities();
 
-      
+
         public ActionResult Index()
         {
-            return View(db.tblSanPhams.ToList());
+            var list = db.tblSanPhams
+                .Where(x => x.TrangThai == true && x.SoLuongTon > 0)
+                .ToList();
+
+            return View(list);
         }
 
-        
+
+
         public ActionResult _DanhMuc()
         {
             return PartialView(db.tblDanhMucs.ToList());

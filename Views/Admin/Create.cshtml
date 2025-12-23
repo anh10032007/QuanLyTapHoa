@@ -1,0 +1,59 @@
+﻿@model QuanLyTapHoa.Models.SanPham
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h4>Thêm sản phẩm</h4>
+
+
+@using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="mb-3">
+        <label class="form-label">Tên sản phẩm</label>
+        @Html.TextBoxFor(m => m.TenSP, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Danh mục</label>
+        @Html.DropDownListFor(
+                                         m => m.MaDM,
+                                         new SelectList(ViewBag.DanhMuc, "MaDM", "TenDM"),
+                                         "-- Chọn danh mục --",
+                                         new { @class = "form-select", required = "required" }
+                                     )
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Nhà cung cấp</label>
+        @Html.DropDownListFor(
+                                    m => m.MaNCC,
+                                    new SelectList(ViewBag.NhaCungCap, "MaNCC", "TenNCC"),
+                                    "-- Chọn nhà cung cấp --",
+                                    new { @class = "form-select", required = "required" }
+                                )
+    </div>
+
+    <div class="mb-3">
+        <label>Giá bán</label>
+        @Html.TextBoxFor(m => m.GiaBan, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        <label>Số lượng tồn</label>
+        @Html.TextBoxFor(m => m.SoLuongTon, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        <label>Ghi chú</label>
+        @Html.TextAreaFor(m => m.MoTaChiTiet, new { @class = "form-control", rows = 4 })
+    </div>
+
+    <div class="mb-3">
+        <label>Ảnh sản phẩm</label>
+        <input type="file" name="UploadImage" class="form-control" />
+    </div>
+
+    <button class="btn btn-success">Tạo sản phẩm</button>
+}
