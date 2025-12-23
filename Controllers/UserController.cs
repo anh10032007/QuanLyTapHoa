@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using QuanLyTapHoa.Models;
-
+using QuanLyTapHoa;
 namespace QuanLyTapHoa.Controllers
 {
     public class UserController : Controller
@@ -130,5 +130,145 @@ namespace QuanLyTapHoa.Controllers
             }
             return View(kh);
         }
+
+        // ---------------------------------------------------------
+        // GET: Hiển thị form Sửa thông tin cá nhân
+        // ---------------------------------------------------------
+        public ActionResult EditProfile()
+        {
+            // 1. Kiểm tra đăng nhập
+            if (Session["User"] == null || Session["Role"].ToString() != "User")
+            {
+                return RedirectToAction("Login");
+            }
+
+            // 2. Lấy thông tin khách hàng từ Session
+            // Lưu ý: Phải query lại từ DB để đảm bảo dữ liệu mới nhất và Entity Framework theo dõi được thay đổi
+            tblKhachHang sessionUser = (tblKhachHang)Session["User"];
+            var kh = db.tblKhachHangs.Find(sessionUser.MaKH); // Giả sử khóa chính là MaKH
+
+            if (kh == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(kh);
+        }
+
+        // ---------------------------------------------------------
+        // POST: Xử lý lưu thông tin đã sửa
+        // ---------------------------------------------------------
+        [HttpPost]
+        public ActionResult EditProfile(tblKhachHang model, string NhapLaiMatKhau)
+        {
+            // Lấy lại user từ DB dựa trên ID ẩn trong form
+            var kh = db.tblKhachHangs.Find(model.MaKH);
+
+            if (kh == null)
+            {
+                ViewBag.Error = "Không tìm thấy thông tin người dùng!";
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                // 1. Cập nhật các thông tin cơ bản
+                kh.TenKH = model.TenKH;
+                kh.DiaChi = model.DiaChi;
+                kh.SDT = model.SDT;
+                kh.Email = model.Email; // Nếu cho phép sửa email
+
+                // 2. Kiểm tra trùng lặp Email/Tên đăng nhập (trừ chính mình ra)
+                var checkExist = db.tblKhachHangs.FirstOrDefault(x => x.TenDangNhap == model.TenDangNhap && x.MaKH != model.MaKH);
+                if (checkExist != null)
+                {
+                    ViewBag.Error = "Tên đăng nhập này đã bị người khác sử dụng!";
+                    return View(model);
+                }
+
+                // 3. Xử lý đổi mật khẩu (Nếu người dùng nhập mật khẩu mới)
+                // Logic: Nếu ô mật khẩu trong form không để trống và khác mật khẩu cũ
+                if (!string.IsNullOrEmpty(model.MatKhau) && model.MatKhau != kh.MatKhau)
+                {
+                    if (model.MatKhau != NhapLaiMatKhau)
+                    {
+                        ViewBag.Error = "Mật khẩu xác nhận không khớp!";
+                        return View(model);
+                    }
+                    // Cập nhật mật khẩu mới
+                    kh.MatKhau = model.MatKhau;
+                }
+
+                // Lưu ý: Nếu model.MatKhau để trống hoặc null, giữ nguyên mật khẩu cũ trong DB (Entity Framework tự lo việc này nếu bạn không gán đè null vào)
+                // Tuy nhiên, để an toàn, tốt nhất nên gán lại mật khẩu cũ nếu người dùng không nhập gì:
+                if (string.IsNullOrEmpty(model.MatKhau))
+                {
+                    // Giữ nguyên mật khẩu cũ
+                    // (Đoạn này tuỳ thuộc vào cách bạn làm View, nếu View bind thẳng vào model.MatKhau thì phải cẩn thận)
+                }
+
+                try
+                {
+                    db.SaveChanges();
+
+                    // 4. Cập nhật lại Session để hiển thị đúng tên mới trên Header
+                    Session["User"] = kh;
+                    Session["TenHienThi"] = kh.TenKH;
+
+                    TempData["Success"] = "Cập nhật thông tin thành công!";
+                    return RedirectToAction("EditProfile"); // Load lại trang để thấy thông báo
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "Có lỗi xảy ra: " + ex.Message;
+                }
+            }
+
+            return View(model);
+        }
+        // ---------------------------------------------------------
+        // GET: Xem thông tin chi tiết (Profile)
+        // ---------------------------------------------------------
+        // ---------------------------------------------------------
+        // GET: Xem thông tin chi tiết (Profile)
+        // ---------------------------------------------------------
+        public ActionResult Profile()
+        {
+            // 1. Kiểm tra đăng nhập
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // 2. Kiểm tra vai trò: Chỉ cho phép "User" (Khách hàng) xem trang này
+            // Nếu là Admin hoặc Nhân viên thì đá về trang Admin hoặc Home
+            if (Session["Role"] != null && Session["Role"].ToString() != "User")
+            {
+                // Tùy chọn: Chuyển hướng về trang Admin nếu muốn
+                // return RedirectToAction("Index", "Admin"); 
+                return RedirectToAction("Index", "Home");
+            }
+
+            // 3. Lấy thông tin user hiện tại
+            var sessionUser = Session["User"] as tblKhachHang;
+
+            // Kiểm tra kỹ lại lần nữa để tránh lỗi Null
+            if (sessionUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // 4. Truy vấn lại từ Database
+            var kh = db.tblKhachHangs.Find(sessionUser.MaKH);
+
+            if (kh == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Login");
+            }
+
+            return View(kh);
+        }
+
     }
 }

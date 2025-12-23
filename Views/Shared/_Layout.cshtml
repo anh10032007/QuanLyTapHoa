@@ -65,7 +65,7 @@
                                 <i class="bi bi-person-circle"></i> Xin chào, @Session["TenHienThi"]
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-person-vcard"></i> Thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Profile", "User")"><i class="bi bi-person-vcard"></i> Thông tin cá nhân</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
@@ -118,21 +118,40 @@
         </div>
     </nav>
 
+    @{
+        // Lấy tên Controller và Action hiện tại
+        string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+        // Kiểm tra xem có phải trang Login hoặc Register của UserController không
+        // Nếu ĐÚNG là Login/Register -> hideSidebar = true
+        bool hideSidebar = currentController == "User" && (currentAction == "Login" || currentAction == "Register");
+    }
+
     <div class="container mt-4">
         <div class="row">
-            <aside class="col-md-3 col-lg-2 mb-4">
-                <h5 class="fw-bold sidebar-header"><i class="bi bi-list-ul"></i> Danh mục</h5>
-                <div class="list-group mb-4">
-                    @Html.Action("_DanhMuc", "Home")
-                </div>
 
-                <h5 class="fw-bold sidebar-header"><i class="bi bi-truck"></i> Nhà cung cấp</h5>
-                <div class="list-group">
-                    @Html.Action("_NhaCungCap", "Home")
-                </div>
-            </aside>
+            @* CHỈ HIỆN SIDEBAR NẾU KHÔNG PHẢI TRANG LOGIN/REGISTER *@
+            @if (!hideSidebar)
+            {
+                <aside class="col-md-3 col-lg-2 mb-4">
+                    <h5 class="fw-bold sidebar-header"><i class="bi bi-list-ul"></i> Danh mục</h5>
+                    <div class="list-group mb-4">
+                        @Html.Action("_DanhMuc", "Home")
+                    </div>
 
-            <main class="col-md-9 col-lg-10">
+                    <h5 class="fw-bold sidebar-header"><i class="bi bi-truck"></i> Nhà cung cấp</h5>
+                    <div class="list-group">
+                        @Html.Action("_NhaCungCap", "Home")
+                    </div>
+                </aside>
+            }
+
+            @* Thay đổi độ rộng cột:
+                - Nếu ẩn sidebar: dùng col-md-12 (Full màn hình)
+                - Nếu hiện sidebar: dùng col-md-9 (như cũ)
+            *@
+            <main class="@(hideSidebar ? "col-md-12" : "col-md-9 col-lg-10")">
                 @if (ViewBag.Error != null)
                 {
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -148,7 +167,7 @@
                     </div>
                 }
 
-                <div class="bg-white p-3 rounded shadow-sm" style="min-height: 500px;">
+                <div class="bg-white p-3 rounded shadow-sm @(hideSidebar ? "d-flex justify-content-center" : "")" style="min-height: 500px;">
                     @RenderBody()
                 </div>
             </main>

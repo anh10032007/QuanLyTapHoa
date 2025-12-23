@@ -1,0 +1,62 @@
+﻿@model QuanLyTapHoa.tblKhachHang
+
+@{
+    ViewBag.Title = "Hồ sơ cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title mb-0"><i class="bi bi-person-lines-fill"></i> Thông tin tài khoản</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Họ và tên:</div>
+                        <div class="col-sm-8">@Model.TenKH</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Tên đăng nhập:</div>
+                        <div class="col-sm-8">@Model.TenDangNhap</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Email:</div>
+                        <div class="col-sm-8">@(string.IsNullOrEmpty(Model.Email) ? "Chưa cập nhật" : Model.Email)</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Số điện thoại:</div>
+                        <div class="col-sm-8">@(string.IsNullOrEmpty(Model.SDT) ? "Chưa cập nhật" : Model.SDT)</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Địa chỉ:</div>
+                        <div class="col-sm-8">@(string.IsNullOrEmpty(Model.DiaChi) ? "Chưa cập nhật" : Model.DiaChi)</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold text-secondary">Ngày tham gia:</div>
+                        <div class="col-sm-8">@string.Format("{0:dd/MM/yyyy}", Model.NgayDangKy)</div>
+                    </div>
+                </div>
+                <div class="card-footer text-end bg-light">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </a>
+                    <a href="@Url.Action("EditProfile", "User")" class="btn btn-primary">
+                        <i class="bi bi-pencil-square"></i> Cập nhật thông tin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

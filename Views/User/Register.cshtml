@@ -5,75 +5,104 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row justify-content-center mt-4 mb-5">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow">
-            <div class="card-header bg-success text-white text-center">
-                <h3 class="fw-bold mb-0">Đăng Ký Thành Viên</h3>
-            </div>
-            <div class="card-body p-4">
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success bg-gradient text-white text-center py-4 rounded-top-4">
+                    <h3 class="fw-bold mb-1"><i class="bi bi-person-plus-fill me-2"></i>Đăng Ký Thành Viên</h3>
+                    <small class="opacity-75">Tạo tài khoản để nhận nhiều ưu đãi mua sắm</small>
+                </div>
 
-                @if (ViewBag.Error != null)
-                {
-                    <div class="alert alert-danger">
-                        @Html.Raw(ViewBag.Error)
-                    </div>
-                }
-
-                @using (Html.BeginForm("Register", "User", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tên đăng nhập (*)</label>
-                        <input type="text" class="form-control" name="TenDangNhap"
-                               value="@(Model != null ? Model.TenDangNhap : "")" required placeholder="Ví dụ: khachhang1">
-                        <div class="form-text">Dùng để đăng nhập vào hệ thống.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Họ và tên (*)</label>
-                        <input type="text" class="form-control" name="TenKH"
-                               value="@(Model != null ? Model.TenKH : "")" required placeholder="Nguyễn Văn A">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Email (*)</label>
-                        <input type="email" class="form-control" name="Email"
-                               value="@(Model != null ? Model.Email : "")" required placeholder="abc@gmail.com">
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Mật khẩu (*)</label>
-                            <input type="password" class="form-control" name="MatKhau" required>
+                <div class="card-body p-5">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @Html.Raw(ViewBag.Error)
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Xác nhận mật khẩu (*)</label>
-                            <input type="password" class="form-control" name="MatKhauXacNhan" required>
+                    }
+
+                    @using (Html.BeginForm("Register", "User", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person-badge text-success"></i></span>
+                                <input type="text" class="form-control bg-light border-start-0" name="TenDangNhap"
+                                       value="@(Model != null ? Model.TenDangNhap : "")" required placeholder="Nhập tên đăng nhập (VD: user123)...">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Số điện thoại</label>
-                        <input type="text" class="form-control" name="SDT"
-                               value="@(Model != null ? Model.SDT : "")" placeholder="09xxxxxxxxx">
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Họ và tên <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person-vcard text-success"></i></span>
+                                    <input type="text" class="form-control bg-light border-start-0" name="TenKH"
+                                           value="@(Model != null ? Model.TenKH : "")" required placeholder="Nhập họ tên...">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Email <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-success"></i></span>
+                                    <input type="email" class="form-control bg-light border-start-0" name="Email"
+                                           value="@(Model != null ? Model.Email : "")" required placeholder="Nhập email...">
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Địa chỉ nhận hàng</label>
-                        <textarea class="form-control" name="DiaChi" rows="2">@(Model != null ? Model.DiaChi : "")</textarea>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Mật khẩu <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-success"></i></span>
+                                    <input type="password" class="form-control bg-light border-start-0" name="MatKhau" required placeholder="******">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Xác nhận MK <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-check text-success"></i></span>
+                                    <input type="password" class="form-control bg-light border-start-0" name="MatKhauXacNhan" required placeholder="******">
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-success fw-bold">
-                            <i class="bi bi-person-plus-fill"></i> ĐĂNG KÝ NGAY
-                        </button>
-                    </div>
-                }
-            </div>
-            <div class="card-footer text-center py-3">
-                <small>Đã có tài khoản? <a href="@Url.Action("Login", "User")" class="text-success fw-bold text-decoration-none">Đăng nhập tại đây</a></small>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-success"></i></span>
+                                <input type="text" class="form-control bg-light border-start-0" name="SDT"
+                                       value="@(Model != null ? Model.SDT : "")" placeholder="Nhập số điện thoại liên hệ...">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Địa chỉ nhận hàng</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-success"></i></span>
+                                <textarea class="form-control bg-light border-start-0" name="DiaChi" rows="2" placeholder="Số nhà, tên đường, phường/xã...">@(Model != null ? Model.DiaChi : "")</textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-success btn-lg shadow fw-bold text-uppercase py-3" style="letter-spacing: 1px; transition: 0.3s;">
+                                Đăng Ký Tài Khoản
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer bg-white text-center py-4 rounded-bottom-4 border-top-0">
+                    <span class="text-muted">Bạn đã có tài khoản?</span>
+                    <a href="@Url.Action("Login", "User")" class="text-success fw-bold text-decoration-none ms-1">
+                        Đăng nhập ngay <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
