@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Tìm kiếm nâng cao";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0"><i class="bi bi-sliders"></i> Tìm kiếm nâng cao</h4>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("KetQuaTimKiemNangCao", "Home", FormMethod.Get))
+        {
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Tên sản phẩm:</label>
+                    <input type="text" name="sTuKhoa" class="form-control" placeholder="Nhập tên sản phẩm cần tìm...">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Giá từ (VNĐ):</label>
+                    <input type="number" name="sGiaTu" class="form-control" min="0">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Đến (VNĐ):</label>
+                    <input type="number" name="sGiaDen" class="form-control" min="0">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Danh mục:</label>
+                    @Html.DropDownList("MaDM", null, "-- Tất cả danh mục --", new { @class = "form-select" })
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Nhà cung cấp:</label>
+                    @Html.DropDownList("MaNCC", null, "-- Tất cả nhà cung cấp --", new { @class = "form-select" })
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary px-5">
+                        <i class="bi bi-search"></i> Tìm kiếm ngay
+                    </button>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary px-4 ms-2">Hủy bỏ</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

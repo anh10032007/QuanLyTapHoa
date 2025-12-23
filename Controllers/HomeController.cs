@@ -93,69 +93,69 @@ namespace QuanLyTapHoa.Controllers
         }
 
         // 9. Xử lý logic Tìm kiếm nâng cao
-        public ActionResult TimKiemNangCao(FormCollection collect)
+        [HttpGet]
+        public ActionResult TimKiemNangCao()
+        {
+            // Lấy dữ liệu cho Dropdown
+            ViewBag.ListDanhMuc = new SelectList(db.tblDanhMucs.ToList(), "MaDM", "TenDM"); // Kiểm tra lại tên cột MaDM/MaDanhMuc trong DB của bạn
+            ViewBag.ListNhaCungCap = new SelectList(db.tblNhaCungCaps.ToList(), "MaNCC", "TenNCC");
+
+            return View();
+        }
+
+        // 2. POST: Xử lý tìm kiếm khi người dùng nhấn nút "Tìm ngay"
+        [HttpPost] // Hoặc dùng [HttpGet] nếu muốn hiện tham số trên URL
+        public ActionResult KetQuaTimKiemNangCao(FormCollection collect)
         {
             var priceRange = collect["price"];
             var maDanhMuc = collect["MaDanhMuc"];
             var maNCC = collect["MaNCC"];
             var sort = collect["sort"];
 
-            List<tblSanPham> list = new List<tblSanPham>();
+            var list = db.tblSanPhams.AsQueryable(); // Dùng AsQueryable để tối ưu truy vấn
 
-            // SỬA 1: Đổi double thành decimal
-            decimal min = -1;
-            decimal max = -1;
-
-            switch (priceRange)
+            // 1. Lọc theo giá
+            if (!string.IsNullOrEmpty(priceRange))
             {
-                case "0": // Dưới 50.000
-                    min = 0;
-                    max = 50000;
-                    // Lưu ý: Nếu cột trong DB tên là GiaBan thì giữ nguyên x.GiaBan
-                    // Dùng (x.GiaBan ?? 0) để xử lý trường hợp giá bị null trong DB
-                    list = db.tblSanPhams.Where(x => (x.GiaBan ?? 0) >= min && (x.GiaBan ?? 0) <= max).ToList();
-                    break;
-
-                case "1": // 50.000 - 100.000
-                    min = 50000;
-                    max = 100000;
-                    list = db.tblSanPhams.Where(x => (x.GiaBan ?? 0) >= min && (x.GiaBan ?? 0) <= max).ToList();
-                    break;
-
-                case "2": // Trên 100.000
-                    min = 100000;
-                    list = db.tblSanPhams.Where(x => (x.GiaBan ?? 0) >= min).ToList();
-                    break;
-
-                default: // Tất cả
-                    list = db.tblSanPhams.ToList();
-                    break;
+                switch (priceRange)
+                {
+                    case "0": // Dưới 50k
+                        list = list.Where(x => x.GiaBan < 50000);
+                        break;
+                    case "1": // 50k - 100k
+                        list = list.Where(x => x.GiaBan >= 50000 && x.GiaBan <= 100000);
+                        break;
+                    case "2": // Trên 100k
+                        list = list.Where(x => x.GiaBan > 100000);
+                        break;
+                }
             }
 
-            // ... (Các phần code lọc theo danh mục, NCC và sort giữ nguyên như cũ) ...
-
-            // Code đoạn dưới giữ nguyên từ câu trả lời trước
-            if (!String.IsNullOrEmpty(maDanhMuc))
+            // 2. Lọc theo Danh mục
+            if (!string.IsNullOrEmpty(maDanhMuc))
             {
-                int idDanhMuc = Convert.ToInt32(maDanhMuc);
-                list = list.Where(x => x.MaDM == idDanhMuc).ToList();
+                int idDM = int.Parse(maDanhMuc);
+                list = list.Where(x => x.MaDM == idDM);
             }
 
-            if (!String.IsNullOrEmpty(maNCC))
+            // 3. Lọc theo Nhà cung cấp
+            if (!string.IsNullOrEmpty(maNCC))
             {
-                int idNCC = Convert.ToInt32(maNCC);
-                list = list.Where(x => x.MaNCC == idNCC).ToList();
+                int idNCC = int.Parse(maNCC);
+                list = list.Where(x => x.MaNCC == idNCC);
             }
 
-            if (!String.IsNullOrEmpty(sort))
+            // 4. Sắp xếp
+            if (!string.IsNullOrEmpty(sort))
             {
-                if (sort == "0")
-                    list = list.OrderBy(s => s.GiaBan).ToList();
+                if (sort == "asc")
+                    list = list.OrderBy(s => s.GiaBan);
                 else
-                    list = list.OrderByDescending(s => s.GiaBan).ToList();
+                    list = list.OrderByDescending(s => s.GiaBan);
             }
 
-            return View("Index", list);
+            // Trả về View Index để hiển thị danh sách kết quả
+            return View("Index", list.ToList());
         }
     } 
 }

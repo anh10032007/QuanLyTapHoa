@@ -25,6 +25,12 @@
             <a class="navbar-brand fw-bold text-white" href="@Url.Action("Index", "Home")">
                 <i class="bi bi-cart4"></i> Tạp Hóa Tiện Lợi
             </a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-light me-auto">
+                <i class="bi bi-house-door-fill"></i> Trang chủ
+            </a>
+            <a href="@Url.Action("TimKiemNangCao", "Home")" class="btn btn-outline-light me-auto" title="Tìm kiếm nâng cao">
+                <i class="bi bi-sliders2-vertical"></i> Tìm kiếm nâng cao
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -72,10 +78,15 @@
                     }
                 </ul>
 
-                @using (Html.BeginForm("TimKiem", "Home", FormMethod.Get, new { @class = "d-flex ms-lg-3" }))
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "d-flex ms-lg-3 align-items-center" }))
                 {
                     <input class="form-control me-2" name="keyword" type="search" placeholder="Tìm mắm, muối, mì..." aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+
+                    <button class="btn btn-outline-light" type="submit" title="Tìm kiếm">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+
                 }
 
                 <a href="@Url.Action("Index", "GioHang")" class="btn btn-outline-light position-relative ms-3">
