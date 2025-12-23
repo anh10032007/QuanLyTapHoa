@@ -3,19 +3,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container text-center mt-5 mb-5" style="min-height: 400px;">
-    <div class="py-5">
-        <i class="bi bi-check-circle-fill text-success display-1"></i>
-        <h2 class="fw-bold mt-4 text-success">ĐẶT HÀNG THÀNH CÔNG!</h2>
-        <p class="lead text-secondary mt-3">
-            Cảm ơn bạn đã mua sắm tại <strong>Tạp Hóa Tiện Lợi</strong>.<br>
-            Đơn hàng của bạn đang được xử lý và sẽ sớm được giao đến.
-        </p>
+<div class="container py-5 text-center">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 600px;">
+        <div class="card-body p-5">
+            <div class="mb-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+            </div>
 
-        <div class="mt-5">
-            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-success btn-lg px-4 fw-bold">
-                <i class="bi bi-house-door-fill"></i> Tiếp tục mua sắm
-            </a>
+            <h2 class="fw-bold text-success mb-3">ĐẶT HÀNG THÀNH CÔNG!</h2>
+
+            <p class="lead text-secondary mb-4">
+                Cảm ơn bạn đã mua sắm tại <strong>Tạp Hóa Tiện Lợi</strong>.<br>
+                Đơn hàng của bạn đang được xử lý và sẽ được giao trong thời gian sớm nhất.
+            </p>
+
+            <div class="d-grid gap-2 d-sm-flex justify-content-center">
+                <a href="@Url.Action("OrderHistory", "User")" class="btn btn-outline-success px-4 py-2">
+                    <i class="bi bi-clock-history"></i> Xem lịch sử đơn hàng
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-success px-4 py-2 fw-bold shadow">
+                    <i class="bi bi-cart-plus"></i> Tiếp tục mua sắm
+                </a>
+            </div>
         </div>
     </div>
 </div>

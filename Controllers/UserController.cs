@@ -269,6 +269,53 @@ namespace QuanLyTapHoa.Controllers
 
             return View(kh);
         }
+        // ---------------------------------------------------------
+        // GET: Xem lịch sử đơn hàng
+        // ---------------------------------------------------------
+        public ActionResult OrderHistory()
+        {
+            // 1. Kiểm tra đăng nhập
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // 2. Lấy thông tin user hiện tại
+            var user = Session["User"] as tblKhachHang;
+
+            // 3. Lấy danh sách đơn hàng của khách này, sắp xếp giảm dần theo ngày (mới nhất lên đầu)
+            // LƯU Ý: Đảm bảo tên bảng đơn hàng của bạn là 'tblDonHangs' hoặc 'tblDonHang'
+            var orders = db.tblDonHangs.Where(n => n.MaKH == user.MaKH)
+                                       .OrderByDescending(n => n.NgayDat)
+                                       .ToList();
+
+            return View(orders);
+        }
+        // ---------------------------------------------------------
+        // GET: Xem chi tiết đơn hàng
+        // ---------------------------------------------------------
+        public ActionResult OrderDetail(int id)
+        {
+            // 1. Kiểm tra đăng nhập
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // 2. Lấy user hiện tại
+            var user = Session["User"] as tblKhachHang;
+
+            // 3. Truy vấn đơn hàng theo ID và phải đúng là của khách hàng này (Bảo mật)
+            var order = db.tblDonHangs.FirstOrDefault(n => n.MaDon == id && n.MaKH == user.MaKH);
+
+            if (order == null)
+            {
+                return HttpNotFound(); // Hoặc chuyển hướng về trang lỗi
+            }
+
+            // Trả về view kèm theo thông tin đơn hàng (bao gồm cả chi tiết sản phẩm nhờ Nav Properties)
+            return View(order);
+        }
 
     }
 }

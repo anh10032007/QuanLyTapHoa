@@ -1,0 +1,93 @@
+﻿@using QuanLyTapHoa
+@model tblDonHang
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.MaDon;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var formatTien = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<div class="container py-5">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-success bg-gradient text-white py-3 rounded-top-4 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-receipt-cutoff me-2"></i>Chi Tiết Đơn Hàng #@Model.MaDon</h4>
+            <span class="badge bg-white text-success fs-6">
+                @string.Format("{0:dd/MM/yyyy HH:mm}", Model.NgayDat)
+            </span>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold text-success border-bottom pb-2">Thông tin giao hàng</h5>
+                    <p class="mb-1"><strong>Người nhận:</strong> @Model.tblKhachHang.TenKH</p>
+                    <p class="mb-1"><strong>Số điện thoại:</strong> @Model.tblKhachHang.SDT</p>
+                    <p class="mb-1"><strong>Địa chỉ:</strong> @(Model.DiaChiGiaoHang ?? Model.tblKhachHang.DiaChi)</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5 class="fw-bold text-success border-bottom pb-2">Trạng thái đơn hàng</h5>
+                    @{
+                        string trangThai = Model.tblTrangThaiDon != null ? Model.tblTrangThaiDon.TenTrangThai : "Đang xử lý";
+                        string color = "warning text-dark";
+                        if (trangThai.Contains("Giao") || trangThai.Contains("vận chuyển")) { color = "primary"; }
+                        if (trangThai.Contains("Thành công") || trangThai.Contains("Hoàn tất")) { color = "success"; }
+                        if (trangThai.Contains("Hủy")) { color = "danger"; }
+                    }
+                    <span class="badge bg-@color fs-5 mt-2">@trangThai</span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.tblChiTietDonHangs)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="@(string.IsNullOrEmpty(item.tblSanPham.AnhSP) ? "https://via.placeholder.com/60" : Url.Content("~/Content/Images/" + item.tblSanPham.AnhSP))"
+                                             class="rounded border me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                        <div>
+                                            <h6 class="mb-0 text-success fw-bold">@item.tblSanPham.TenSP</h6>
+                                            <small class="text-muted">ĐVT: @item.tblSanPham.DonViTinh</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">@String.Format(formatTien, "{0:c0}", item.DonGiaLucMua)</td>
+                                <td class="text-center fw-bold">x @item.SoLuong</td>
+                                <td class="text-end fw-bold text-danger">
+                                    @String.Format(formatTien, "{0:c0}", item.SoLuong * item.DonGiaLucMua)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="bg-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold fs-5">TỔNG TIỀN THANH TOÁN:</td>
+                            <td class="text-end fw-bold fs-4 text-danger">
+                                @String.Format(formatTien, "{0:c0}", Model.TongTien)
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white text-end py-3 rounded-bottom-4">
+            <a href="@Url.Action("OrderHistory", "User")" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại danh sách
+            </a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-success ms-2">
+                <i class="bi bi-cart-plus"></i> Mua thêm
+            </a>
+        </div>
+    </div>
+</div>

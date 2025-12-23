@@ -66,7 +66,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="@Url.Action("Profile", "User")"><i class="bi bi-person-vcard"></i> Thông tin cá nhân</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</a></li>
+                               <li><a class="dropdown-item" href="@Url.Action("OrderHistory", "User")"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="@Url.Action("Logout","User")">
@@ -125,7 +125,13 @@
 
         // Kiểm tra xem có phải trang Login hoặc Register của UserController không
         // Nếu ĐÚNG là Login/Register -> hideSidebar = true
-        bool hideSidebar = currentController == "User" && (currentAction == "Login" || currentAction == "Register");
+        // Thêm "EditProfile", "Profile", "OrderHistory" vào danh sách ẩn Sidebar
+        bool hideSidebar = currentController == "User" &&
+                           (currentAction == "Login" ||
+                            currentAction == "Register" ||
+                            currentAction == "EditProfile" ||
+                            currentAction == "Profile" ||
+                            currentAction == "OrderHistory");
     }
 
     <div class="container mt-4">

@@ -272,6 +272,8 @@
     <Content Include="Views\Admin\OrderDetail.cshtml" />
     <Content Include="Views\User\EditProfile.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\User\OrderHistory.cshtml" />
+    <Content Include="Views\User\OrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

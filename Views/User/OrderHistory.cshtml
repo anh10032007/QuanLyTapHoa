@@ -1,0 +1,100 @@
+﻿@model IEnumerable<QuanLyTapHoa.tblDonHang>
+
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-success bg-gradient text-white py-3 rounded-top-4">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-bag-check-fill me-2"></i>Đơn Hàng Của Tôi</h4>
+        </div>
+        <div class="card-body p-4">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-cart-x display-1 text-muted"></i>
+                    <p class="mt-3 text-muted">Bạn chưa có đơn hàng nào.</p>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-success rounded-pill px-4">Mua sắm ngay</a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã ĐH</th>
+                                <th>Ngày đặt</th>
+                                <th>Tình trạng</th>
+                                <th class="text-end">Tổng tiền</th>
+                                <th class="text-center">Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-success">#@item.MaDon</td>
+
+                                    <td>@string.Format("{0:dd/MM/yyyy HH:mm}", item.NgayDat)</td>
+
+                                    <td>
+                                        @{
+                                            // Lấy tên trạng thái an toàn (tránh lỗi nếu null)
+                                            string tenTrangThai = item.tblTrangThaiDon != null ? item.tblTrangThaiDon.TenTrangThai : "Đang xử lý";
+
+                                            // Logic màu sắc badge dựa trên nội dung tên trạng thái
+                                            string badgeColor = "bg-warning text-dark"; // Mặc định màu vàng (Chờ/Đang xử lý)
+
+                                            if (item.tblTrangThaiDon != null)
+                                            {
+                                                // Kiểm tra ID hoặc Tên để đổi màu (Ví dụ: ID 3 là hoàn thành, ID 4 là hủy...)
+                                                // Ở đây mình check theo Tên cho dễ hiểu:
+                                                string statusLower = tenTrangThai.ToLower();
+
+                                                if (statusLower.Contains("thành công") || statusLower.Contains("đã giao") || statusLower.Contains("hoàn tất"))
+                                                {
+                                                    badgeColor = "bg-success"; // Màu xanh lá
+                                                }
+                                                else if (statusLower.Contains("đang giao") || statusLower.Contains("vận chuyển"))
+                                                {
+                                                    badgeColor = "bg-primary"; // Màu xanh dương
+                                                }
+                                                else if (statusLower.Contains("hủy") || statusLower.Contains("thất bại"))
+                                                {
+                                                    badgeColor = "bg-danger"; // Màu đỏ
+                                                }
+                                            }
+                                        }
+                                        <span class="badge @badgeColor">@tenTrangThai</span>
+                                    </td>
+
+                                    <td class="text-end fw-bold text-danger">
+                                        @{
+                                            // Format tiền tệ Việt Nam
+                                            var formatTien = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+                                        }
+                                        @String.Format(formatTien, "{0:c0}", item.TongTien)
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a href="@Url.Action("OrderDetail", "User", new { id = item.MaDon })" class="btn btn-outline-success btn-sm rounded-pill" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i> Xem
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+        <div class="card-footer bg-white border-top-0 pb-4">
+            <a href="@Url.Action("Index", "Home")" class="text-decoration-none text-success fw-bold">
+                <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+    </div>
+</div>
